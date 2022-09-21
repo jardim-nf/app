@@ -8,13 +8,15 @@ import {
     TouchableWithoutFeedback,
     Text,
     Platform,
-    Keyboard
+    Keyboard,
+    Alert
 } from 'react-native';
 
 import { Button } from '../components/Button'
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { useNavigation } from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function UserIdentification() {
 
@@ -36,8 +38,17 @@ export function UserIdentification() {
         setIsFilled(!!value);
         setName(value);
     }
-    function handleStart() {
+    async function handleSubmit() {
+        if(!name)
+        return Alert.alert('Me diz com chamar você 😥? ');
+
+
+        try{
+       await AsyncStorage.setItem('@app:user', name);
         navigation.navigate('Confirmation');
+    }catch{
+        Alert.alert('Não foi possivel salvar o seu nome 😥')
+    }
     }
 
     return (
@@ -70,7 +81,7 @@ export function UserIdentification() {
                             <View style={styles.footer}>
                                 <Button
                                     title="Confirmar"
-                                    onPress={handleStart}
+                                    onPress={handleSubmit}
                                 />
                             </View>
                         </View>

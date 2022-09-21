@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 import { UserIdentification } from '../pages/UserIdentification';
 import { Confirmation } from '../pages/Confirmation';
 import { PlantSelect } from '../pages/PlantSelect';
+import { PlantSave } from '../pages/PlantSave';
 
 const stackRoutes = createStackNavigator();
 const AppRoutes: React.FC = ()=>(
@@ -38,7 +39,11 @@ const AppRoutes: React.FC = ()=>(
         options={{ title: 'Bem Vindo Macumbeiro(a)' }}
         />
 
-      
+        <stackRoutes.Screen
+        name="PlantSave"
+        component={PlantSave}
+        options={{ title: 'Bem Vindo Macumbeiro(a)' }}
+        />
     </stackRoutes.Navigator>
 )
 
