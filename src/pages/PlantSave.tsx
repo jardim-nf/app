@@ -19,6 +19,7 @@ import fonts from "../../styles/fonts";
 import DateTimePicker, {Event} from '@react-native-community/datetimepicker';
 import { format, isBefore } from "date-fns";
 import { loadPlant, PlantProps, savePlant } from "../libs/storages";
+import { useNavigation } from "@react-navigation/core";
 
 interface Params {
     plant: PlantProps
@@ -27,6 +28,7 @@ interface Params {
 export function PlantSave() {
     const [selectedDateTime, setSelectedDateTime] = useState( new Date());
     const [ showDatePicker, setShowDatePicker] = useState(Platform.OS ==='ios');   
+    const navigation = useNavigation();
 
     const route = useRoute();
     const { plant } = route.params as Params;
@@ -50,16 +52,23 @@ export function PlantSave() {
 
 
     async function handleSave(){
-        const data = await  loadPlant();
-         console.log(data);
-     //   try{
-     //      await savePlant({
-       //     ...plant,
-       //     dateTimeNotification: selectedDateTime
-      //     });
-      //  }catch{
-      //      Alert.alert('Não foi possível salvar. 😔');
-      //  }
+    try{
+         await savePlant({
+       ...plant,
+     dateTimeNotification: selectedDateTime
+         });
+
+         navigation.navigate('Confirmation',{ 
+            title:'Tudo certo',
+            subtitle: 'Fique tranquilo que sempre vamos lembrar de você a cuidar das suas plantinhas com muito carinho',
+            buttonTitle:'Muito obrigado :D ',
+            icon:'hug',
+            nextScreen:'MyPlants',
+        } );
+
+      }catch{
+         Alert.alert('Não foi possível salvar. 😔');
+     }
     }
 
     return (
