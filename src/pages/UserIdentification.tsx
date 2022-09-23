@@ -1,91 +1,96 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
+    Text,
     View,
-    TextInput,
+    TextInput,    
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Text,
     Platform,
     Keyboard,
     Alert
 } from 'react-native';
-
-import { Button } from '../components/Button'
-import colors from "../../styles/colors";
-import fonts from "../../styles/fonts";
 import { useNavigation } from '@react-navigation/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export function UserIdentification() {
+import { Button } from '../components/Button';
 
-    const navigation = useNavigation();
+import colors from '../styles/colors';
+import fonts from '../styles/fonts';
 
+export function UserIdentification(){
     const [isFocused, setIsFocused] = useState(false);
     const [isFilled, setIsFilled] = useState(false);
     const [name, setName] = useState<string>();
 
-    function handleInputBlur() {
+    const navigation = useNavigation();
+
+    function handleInputBlur(){
         setIsFocused(false);
         setIsFilled(!!name);
     }
-    function handleInputFocus() {
-        setIsFocused(true);
+
+    function handleInputFocus(){
+        setIsFocused(true)
     }
 
-    function handleInputChange(value: string) {
+    function handleInputChange(value: string){
         setIsFilled(!!value);
         setName(value);
-    }
-    async function handleSubmit() {
-        if(!name)
-        return Alert.alert('Me diz com chamar você 😥? ');
+    }   
 
+    async function handleSubmit(){
+        if(!name)
+            return Alert.alert('Me diz como chamar você 😢');
 
         try{
-       await AsyncStorage.setItem('@app:user', name);
-        navigation.navigate('Confirmation',{ 
-                title:'Prontinho',
+            await AsyncStorage.setItem('@plantmanager:user', name);
+            navigation.navigate('Confirmation', {
+                title: 'Prontinho',
                 subtitle: 'Agora vamos começar a cuidar das suas plantinhas com muito cuidado.',
-                buttonTitle:'Começar',
-                icon:'smile',
-                nextScreen:'PlantSelect',
-            } );
-    }catch{
-        Alert.alert('Não foi possivel salvar o seu nome 😥')
-    }
+                buttonTitle: 'Começar',
+                icon: 'smile',
+                nextScreen: 'PlantSelect',
+            });        
+        }catch{
+            Alert.alert('Não foi possível salvar o seu nome. 😢');
+        }
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <KeyboardAvoidingView style={styles.container}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            <KeyboardAvoidingView
+                style={styles.container}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height' }
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.content}>
                         <View style={styles.form}>
                             <View style={styles.header}>
                                 <Text style={styles.emoji}>
-                                    {isFilled ? '🤩' : '😃'}
+                                    { isFilled ? '😄' : '😀' }                   
                                 </Text>
-
                                 <Text style={styles.title}>
-                                    Como podemos{'\n'}
+                                    Como podemos {'\n'}
                                     chamar você?
                                 </Text>
                             </View>
-
-                            <TextInput
-                                style={[styles.input,
-                                (isFocused || isFilled) && { borderColor: colors.heading }]}
-                                placeholder="Digite o seu Nome"
+                        
+                            <TextInput 
+                                style={[
+                                    styles.input,
+                                    (isFocused || isFilled) && 
+                                    { borderColor: colors.green}
+                                ]}
+                                placeholder="Digite um nome"
                                 onBlur={handleInputBlur}
                                 onFocus={handleInputFocus}
                                 onChangeText={handleInputChange}
                             />
+
                             <View style={styles.footer}>
-                                <Button
+                                <Button  
                                     title="Confirmar"
                                     onPress={handleSubmit}
                                 />
@@ -103,24 +108,23 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
     },
     content: {
         flex: 1,
         width: '100%',
-    },
-    form: {
+      },
+      form: {
         flex: 1,
         justifyContent: 'center',
         paddingHorizontal: 54,
         alignItems: 'center',
-        width: '100%'
     },
     header: {
         alignItems: 'center'
     },
     emoji: {
-        fontSize: 44,
+        fontSize: 44
     },
     input: {
         borderBottomWidth: 1,
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginTop: 50,
         padding: 10,
-        TextAlign: 'center'
+        textAlign: 'center'
     },
     title: {
         fontSize: 24,
@@ -141,9 +145,8 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     footer: {
-        marginTop: 40,
         width: '100%',
+        marginTop: 40,
         paddingHorizontal: 20
     }
-
 });
